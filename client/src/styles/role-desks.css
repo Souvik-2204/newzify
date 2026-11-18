@@ -1,0 +1,349 @@
+/* Role directory — a handbook shared by the staff entry and authenticated desks. */
+.my-desk-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ecede3;
+  border: 1px solid #d5d9c8;
+  border-left: 3px solid #53674f;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.my-desk-emblem,
+.desk-seal {
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #bdc5b2;
+  color: #405642;
+  width: 44px;
+  height: 48px;
+}
+.my-desk-copy {
+  min-width: 0;
+}
+.my-desk-copy > span,
+.desk-overline,
+.roles-guide-heading > span,
+.role-entry-meta > span {
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 650;
+  letter-spacing: 1.7px;
+}
+.my-desk-copy > span {
+  color: #5b6956;
+}
+.my-desk-copy h2 {
+  font: 24px/1.14 var(--serif);
+  letter-spacing: -0.9px;
+  margin: 2px 0 4px;
+}
+.my-desk-copy p,
+.desk-summary p,
+.role-entry p,
+.desk-review-note p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.my-desk-copy p,
+.role-entry p {
+  color: #596056;
+}
+.desk-open {
+  margin-left: auto;
+  flex: none;
+  border-bottom: 1px solid #798774;
+  font-size: 12px;
+  font-weight: 650;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.desk-open:hover,
+.roles-help-button:hover {
+  color: var(--red);
+}
+.desk-console {
+  background: #25382e;
+  color: #faf8ed;
+  padding: clamp(18px, 2.2vw, 30px);
+  border: 1px solid #25382e;
+}
+.desk-console-heading,
+.roles-guide-heading,
+.role-entry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.desk-overline,
+.desk-identity,
+.role-entry-meta span,
+.role-entry-meta b {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.desk-overline {
+  color: #f0c9ad;
+}
+.desk-overline i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e9bf9e;
+}
+.desk-identity {
+  font-size: 12px;
+  color: #dce2d6;
+}
+.desk-summary {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin: 24px 0;
+}
+.desk-seal {
+  width: 52px;
+  height: 57px;
+  color: #ebcbb1;
+  border-color: #667668;
+}
+.desk-summary h2 {
+  font: clamp(29px, 3vw, 43px)/1.08 var(--serif);
+  letter-spacing: -1.4px;
+  margin: 0 0 7px;
+}
+.desk-summary p {
+  color: #e2e6db;
+}
+.desk-tools {
+  border-top: 1px solid #56665a;
+  padding-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr));
+  gap: 8px;
+}
+.desk-tools button {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  background: #34483b;
+  color: #fffcf3;
+  border: 1px solid #526655;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.desk-tools button:hover,
+.desk-assignments button:hover {
+  background: #435849;
+}
+.desk-tools svg {
+  flex: none;
+}
+.desk-tools button > svg:last-child {
+  margin-left: auto;
+  color: #e7c5aa;
+}
+.desk-assignments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 12px;
+}
+.desk-assignments > span {
+  color: #c5d0be;
+  margin-right: 4px;
+}
+.desk-assignments button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #647664;
+  padding: 6px 9px;
+  color: #fffcf3;
+}
+.roles-guide {
+  margin: 28px 0 16px;
+}
+.roles-guide-heading {
+  margin: 0 0 14px;
+  align-items: flex-end;
+}
+.roles-guide-heading h2 {
+  margin: 6px 0 0;
+  font: clamp(25px, 2.4vw, 34px)/1.15 var(--serif);
+  letter-spacing: -1.2px;
+}
+.roles-guide-heading > span {
+  color: #666e62;
+  white-space: nowrap;
+}
+.roles-register {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.role-entry {
+  min-width: 0;
+  background: #fcfbf5;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(15px, 1.8vw, 25px);
+}
+.role-entry.is-current {
+  background: #ecede2;
+}
+.role-entry-meta {
+  min-height: 19px;
+  color: #667060;
+}
+.role-entry-meta > span {
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+.role-entry-meta i {
+  width: 14px;
+  height: 1px;
+  background: #a8ae9e;
+}
+.role-entry-meta b {
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  color: #415740;
+  font-weight: 650;
+}
+.role-entry h3 {
+  font: clamp(23px, 2vw, 31px)/1.18 var(--serif);
+  letter-spacing: -0.9px;
+  margin: 13px 0 6px;
+}
+.desk-review-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #62695b;
+  padding: 12px 0;
+}
+.desk-review-note svg {
+  flex: none;
+  margin-top: 2px;
+}
+.desk-review-note p {
+  font-size: 12px;
+}
+.roles-help-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 650;
+  border-bottom: 1px solid var(--line);
+  min-height: 32px;
+  color: var(--ink);
+}
+.desk-signin-guide .roles-register {
+  margin: 17px 0;
+}
+.desk-signin-guide .role-entry {
+  padding: 15px;
+}
+.desk-signin-guide .role-entry h3 {
+  font-size: 23px;
+}
+.desk-signin-guide .role-entry p {
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .my-desk-bar {
+    gap: 11px;
+    flex-wrap: wrap;
+    padding: 14px;
+  }
+  .my-desk-emblem {
+    width: 36px;
+    height: 40px;
+  }
+  .my-desk-copy {
+    flex: 1;
+  }
+  .my-desk-copy p {
+    font-size: 12px;
+  }
+  .desk-open {
+    margin-left: 47px;
+    min-height: 32px;
+  }
+  .desk-summary {
+    margin: 18px 0;
+  }
+  .desk-identity {
+    font-size: 11px;
+  }
+  .desk-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .desk-tools button {
+    font-size: 12px;
+  }
+  .desk-tools button > svg:first-child {
+    display: none;
+  }
+  .role-entry p {
+    font-size: 12px;
+  }
+}
+@media (max-width: 520px) {
+  .roles-register {
+    grid-template-columns: 1fr;
+  }
+  .desk-console {
+    padding: 17px;
+  }
+  .desk-console-heading {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  .desk-seal {
+    width: 37px;
+    height: 44px;
+  }
+  .desk-summary {
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .desk-summary h2 {
+    font-size: 29px;
+  }
+  .desk-summary p {
+    font-size: 12px;
+  }
+  .desk-open {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid #d1d6c6;
+    border-bottom: 0;
+    padding-top: 6px;
+  }
+  .roles-guide {
+    margin-top: 23px;
+  }
+  .desk-page .cms-title {
+    margin-bottom: 16px;
+  }
+  .roles-guide-heading > span {
+    font-size: 8px;
+  }
+}

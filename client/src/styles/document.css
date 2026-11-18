@@ -1,0 +1,49 @@
+.rich-prose {
+  overflow-wrap: anywhere;
+}
+.rich-prose a {
+  color: #87523d;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rich-prose ul,
+.rich-prose ol {
+  padding-left: 1.6em;
+  margin: 17px 0;
+  font:
+    18px/1.7 Georgia,
+    serif;
+}
+.rich-prose li p {
+  margin: 4px 0;
+}
+.rich-prose h3 {
+  font-size: 25px;
+  margin: 22px 0 11px;
+  letter-spacing: -0.8px;
+}
+.rich-prose blockquote {
+  border-left: 2px solid #b68c68;
+  padding: 6px 0 6px 22px;
+  margin: 24px 0;
+  color: #57634e;
+}
+.rich-prose blockquote p {
+  font: 25px/1.45 var(--serif);
+  margin: 0;
+}
+.rich-prose figure {
+  margin: 23px 0;
+}
+.rich-prose img {
+  max-height: 570px;
+  width: 100%;
+  object-fit: contain;
+}
+.reading-column > .rich-prose > p:first-child::first-letter,
+.reading-column .rich-prose > p:first-child::first-letter {
+  font: 65px/0.88 var(--serif);
+  float: left;
+  padding: 6px 8px 0 0;
+  color: var(--red);
+}

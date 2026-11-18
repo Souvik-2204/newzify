@@ -1,0 +1,60 @@
+{
+  "name": "the-meridian",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "dev": "node scripts/dev.mjs",
+    "start": "NODE_ENV=production node server/start.mjs",
+    "build": "prisma generate && vite build --config vite.config.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.mjs --run",
+    "test:browser": "node tests/browser-smoke.mjs && node tests/newsroom-browser.mjs",
+    "format": "prettier --write client/src server scripts prisma/seed.mjs tests vite.config.js",
+    "test:newsroom": "node tests/newsroom-browser.mjs",
+    "build:vercel": "prisma generate && vite build --config vite.config.js --mode vercel && node scripts/stage-vercel.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "The Meridian: a source-dated Indian newspaper, membership platform and editorial workspace.",
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "@tiptap/extension-image": "^3.34.0",
+    "@tiptap/pm": "^3.34.0",
+    "@tiptap/react": "^3.34.0",
+    "@tiptap/starter-kit": "^3.34.0",
+    "@vercel/blob": "^2.9.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.10",
+    "embedded-postgres": "^18.6.0-beta.19",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "lucide-react": "^1.75.0",
+    "multer": "^2.5.0",
+    "razorpay": "^2.9.8",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "prettier": "^3.10.1",
+    "prisma": "^6.19.0",
+    "vite": "^6.4.6"
+  },
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": "^20.19.0 || 22.x"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "effect": "3.22.4",
+      "deepmerge-ts": "8.0.2"
+    }
+  }
+}

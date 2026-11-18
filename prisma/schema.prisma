@@ -1,0 +1,295 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Level {
+  FREE
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum ArticleStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+}
+
+enum SubStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  HALTED
+}
+
+model Role {
+  id    String @id
+  name  String
+  users User[]
+}
+
+model User {
+  id                String          @id @default(cuid())
+  name              String
+  email             String          @unique
+  passwordHash      String
+  roleId            String          @default("READER")
+  role              Role            @relation(fields: [roleId], references: [id])
+  sectionId         String?
+  section           Category?       @relation(fields: [sectionId], references: [id])
+  bio               String          @default("")
+  createdAt         DateTime        @default(now())
+  sessions          Session[]
+  articles          Article[]       @relation("ArticleByline")
+  createdArticles   Article[]       @relation("ArticleCreator")
+  submittedArticles Article[]       @relation("ArticleSubmitter")
+  assignedSections  Category[]      @relation("EditorialAssignments")
+  uploads           UploadedImage[]
+  liveBylines       Publication[]
+  adminEvents       AdminEvent[]
+  approvals         Approval[]
+  bookmarks         Bookmark[]
+  subscriptions     Subscription[]
+}
+
+model Session {
+  tokenHash String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model Category {
+  id             String        @id @default(cuid())
+  name           String        @unique
+  slug           String        @unique
+  description    String
+  position       Int           @default(0)
+  articles       Article[]
+  editors        User[]
+  sectionEditors User[]        @relation("EditorialAssignments")
+  publications   Publication[]
+}
+
+model Tag {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  articles     Article[]
+  publications Publication[] @relation("LiveTags")
+}
+
+model Article {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  title            String
+  summary          String
+  content          String        @db.Text
+  image            String
+  imageCredit      String        @default("The Meridian · Editorial image")
+  categoryId       String
+  category         Category      @relation(fields: [categoryId], references: [id])
+  tags             Tag[]
+  authorId         String
+  author           User          @relation("ArticleByline", fields: [authorId], references: [id])
+  creatorId        String
+  creator          User          @relation("ArticleCreator", fields: [creatorId], references: [id])
+  submittedById    String?
+  submitter        User?         @relation("ArticleSubmitter", fields: [submittedById], references: [id])
+  submittedAt      DateTime?
+  requiresApproval Boolean       @default(true)
+  approvalLocked   Boolean       @default(false)
+  indiaConfirmed   Boolean       @default(false)
+  bodyDoc          Json?
+  inlineUploads    String[]      @default([])
+  seoTitle         String        @default("")
+  metaDescription  String        @default("")
+  publicationDate  DateTime?
+  deletedAt        DateTime?
+  live             Publication?
+  lastEditorId     String
+  access           Level         @default(FREE)
+  status           ArticleStatus @default(DRAFT)
+  region           String        @default("IN")
+  sourceName       String
+  sourceUrl        String
+  sourceDate       DateTime?
+  location         String        @default("India")
+  featuredRank     Int           @default(0)
+  editorPick       Boolean       @default(false)
+  heroSlot         Int           @default(0)
+  breaking         Boolean       @default(false)
+  views            Int           @default(0)
+  revision         Int           @default(1)
+  publishedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  approvals        Approval[]
+  bookmarks        Bookmark[]
+
+  @@index([status, region, sourceDate])
+  @@index([categoryId, publishedAt])
+  @@index([inlineUploads], type: Gin)
+}
+
+model Approval {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String
+  reason    String?
+  revision  Int
+  createdAt DateTime @default(now())
+}
+
+model Plan {
+  id               String         @id @default(cuid())
+  name             String
+  level            Level          @unique
+  monthlyPaise     Int
+  annualPaise      Int
+  features         String[]
+  available        Boolean        @default(true)
+  version          Int            @default(1)
+  gatewayMonthlyId String?
+  gatewayAnnualId  String?
+  subscriptions    Subscription[]
+}
+
+model Subscription {
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id])
+  planId              String
+  plan                Plan      @relation(fields: [planId], references: [id])
+  cycle               String
+  status              SubStatus @default(PENDING)
+  gatewayId           String?   @unique
+  periodEnd           DateTime?
+  cancelAtEnd         Boolean   @default(false)
+  agreedAmountPaise   Int?
+  agreedGatewayPlanId String?
+  lastEventAt         DateTime?
+  createdAt           DateTime  @default(now())
+  payments            Payment[]
+
+  @@index([userId, status])
+}
+
+model Payment {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  gatewayId      String       @unique
+  amountPaise    Int
+  currency       String       @default("INR")
+  status         String
+  createdAt      DateTime     @default(now())
+}
+
+model WebhookEvent {
+  id        String   @id
+  event     String
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  userId    String
+  articleId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, articleId])
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model PlanInterest {
+  id        String   @id @default(cuid())
+  email     String
+  level     Level
+  cycle     String
+  createdAt DateTime @default(now())
+
+  @@unique([email, level, cycle])
+}
+
+// Reader-facing snapshot. Draft changes never modify this record.
+model Publication {
+  id              String   @id
+  article         Article  @relation(fields: [id], references: [id], onDelete: Cascade)
+  revision        Int
+  slug            String   @unique
+  title           String
+  summary         String
+  content         String   @db.Text
+  bodyDoc         Json?
+  inlineUploads   String[] @default([])
+  image           String
+  imageCredit     String
+  authorId        String
+  author          User     @relation(fields: [authorId], references: [id])
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  tags            Tag[]    @relation("LiveTags")
+  access          Level
+  sourceName      String
+  sourceUrl       String
+  sourceDate      DateTime
+  region          String
+  location        String
+  publishedAt     DateTime
+  seoTitle        String   @default("")
+  metaDescription String   @default("")
+
+  @@index([region, sourceDate, publishedAt])
+  @@index([categoryId, publishedAt])
+  @@index([inlineUploads], type: Gin)
+}
+
+model NewsroomSettings {
+  id              String   @id @default("edition")
+  defaultApproval Boolean  @default(true)
+  defaultAccess   Level    @default(FREE)
+  deskNote        String   @default("")
+  layoutVersion   Int      @default(1)
+  updatedAt       DateTime @updatedAt
+}
+
+model AdminEvent {
+  id        String   @id @default(cuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId, createdAt])
+}
+
+// Original media stays private until deliberately used in a released edition.
+model UploadedImage {
+  path       String   @id
+  uploaderId String
+  uploader   User     @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}

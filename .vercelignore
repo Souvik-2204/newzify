@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+data/
+node_modules/
+.vercel/
+client/dist/
+/public/
+server/generated-web.mjs
+cms-*.webm
+meridian-admin-desk-guide.png
+meridian-vercel-source.zip
+.cache/
