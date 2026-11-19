@@ -1,6 +1,6 @@
 # Deploy The Meridian to Vercel
 
-The Express function serves `/api`, `/cms`, `/admin` and SEO HTML for `/story/:slug`. The build stages the React code, fonts and bundled editorial images in Vercel's static `public/` directory. Staff uploads go to **private** Vercel Blob storage and are streamed through `/uploads/` only after the existing newsroom or reader access check.
+The Express function serves `/api`, `/cms`, `/admin` and SEO HTML for `/story/:slug`. The build stages the React code, fonts and bundled editorial images in Vercel’s static `public/` directory and bundles the same public assets for an Express fallback. Missing asset URLs return 404 instead of a copy of the homepage. Staff uploads go to **private** Vercel Blob storage and are streamed through `/uploads/` only after the existing newsroom or reader access check.
 
 ## 1. Import the source
 
@@ -31,7 +31,7 @@ Do not add seeding to the deployment build. Apply later schema migrations as a s
 ## 4. Deploy and check
 
 1. Deploy or redeploy in Vercel after the environment variables are configured.
-2. Visit `https://YOUR-DOMAIN/api/health` and look for `"status":"ready"`.
+2. Open the homepage. If it is blank, check a JavaScript request under `/assets/` in your browser’s Network panel; it must return JavaScript, not HTML. Confirm the newest deployment used the latest source commit. Then check `https://YOUR-DOMAIN/api/health` for `"status":"ready"`. If health returns 500, inspect the latest Vercel function log for `/api/health` and double-check the Production `DATABASE_URL`. Do not share logs containing connection strings.
 3. Open `/cms`, sign in as the production administrator, and check **Roles & access**. Create other staff accounts from **Users & roles**.
 4. Upload a small test image to a draft. Check that it previews for staff and that its `/uploads/` address is not accessible from a signed-out tab. Delete the test draft when done.
 5. Verify a story link, a reader sign-in, and the published edition before launch. Razorpay remains optional and test-mode only in this version; see [Payments](PAYMENTS.md).

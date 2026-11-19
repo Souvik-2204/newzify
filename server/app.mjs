@@ -3,6 +3,7 @@ import { uploadLimitMb } from './upload-store.mjs';
 import { storyHtml } from './seo.mjs';
 import express from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { ZodError } from 'zod';
@@ -104,8 +105,17 @@ export function createApp({ app = express(), web } = {}) {
     res.status(status).json({ error: message, code: publicCode ? err.code : undefined });
   });
   if (web) {
-    // The Express builder serves generated public/ assets from its CDN. Only HTML and
-    // its image allowlist are needed in the function bundle.
+    // When a CDN asset does not get published, serve the bundled file, not SPA HTML.
+    // Limit this fallback to the generated build manifest and its public URL prefixes.
+    app.get(/^\/(?:assets|fonts|images)(?:\/|$)|^\/favicon\.svg$/, (req, res) => {
+      const file = web.files.get(req.path);
+      if (!file) return res.status(404).type('text').send('Asset not found.');
+      const hashed = req.path.startsWith('/assets/');
+      return res.sendFile(fileURLToPath(file), {
+        maxAge: hashed ? '1y' : '1h',
+        immutable: hashed,
+      });
+    });
     app.get('/story/:slug', storyHtml(null, web.html));
     app.get('/{*path}', (req, res) => res.type('html').send(web.html));
   } else if (production) {
